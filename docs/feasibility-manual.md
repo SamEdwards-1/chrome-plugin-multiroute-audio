@@ -22,7 +22,7 @@ This plan requires a visible desktop Chrome session and two browser-visible outp
 | Context interaction | Reload extension, restart a route using the toolbar click. | Whether `AudioContext.resume()` succeeds in the offscreen page without another user gesture; record exact exception if it fails. |
 | Setup permission sharing | Grant/select an output on setup page, reopen popup, then start a route to it. | Whether the offscreen engine enumerates and actually uses the same endpoint. |
 | Output switch | With both routes playing, switch one route in its source tab's popup. | Correct destination after switch and whether the other route is interrupted. |
-| Output loss | With a fixed route active, disconnect or disable its endpoint. | Context state, audible/meter path, any Chrome fallback, and what popup reports. This prototype has no output-loss monitor, so failover may occur. |
+| Output loss | With a fixed route active, disconnect or disable its endpoint. | Context state, audible/meter path, any Chrome fallback, and both the selected and browser-reported sink labels in the popup. A reported sink ID does not prove the physical path. This prototype has no output-loss monitor, so failover may occur. |
 | Stop cleanup | Stop each route in its source tab's popup. | Native playback returns, no duplicate path, and offscreen document closes after the last route. |
 | No microphone | Repeat discovery and default routing on a system without usable audio input or with input permission denied. | Available endpoints, permission errors, and whether default output still works. |
 

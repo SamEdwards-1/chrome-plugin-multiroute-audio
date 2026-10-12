@@ -4,7 +4,8 @@ const stoppingTabs = new Map();
 
 function snapshot() {
   return { ok: true, stopping: stoppingTabs.size, routes: [...routes.values()].map(({ tabId, deviceId, context, track }) => ({
-    tabId, deviceId, contextState: context.state, trackState: track.readyState
+    tabId, deviceId, contextState: context.state, trackState: track.readyState,
+    sinkId: typeof context.sinkId === "string" ? context.sinkId : null
   })) };
 }
 

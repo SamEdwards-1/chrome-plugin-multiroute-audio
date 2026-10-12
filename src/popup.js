@@ -35,7 +35,10 @@ async function refresh() {
   for (const item of routeResult.routes) {
     const row = document.createElement("li");
     const label = outputResult.outputs.find(output => output.deviceId === item.deviceId)?.label || "Unavailable output";
-    row.textContent = `Tab ${item.tabId}: ${label}; context ${item.contextState}; track ${item.trackState}`;
+    const sinkLabel = item.sinkId === null ? "not reported" :
+      item.sinkId === "" || item.sinkId === "default" ? "System default" :
+      outputResult.outputs.find(output => output.deviceId === item.sinkId)?.label || "unavailable or changed output";
+    row.textContent = `Tab ${item.tabId}: selected ${label}; browser sink ${sinkLabel}; context ${item.contextState}; track ${item.trackState}`;
     routesElement.append(row);
   }
   if (!routeResult.routes.length) {
