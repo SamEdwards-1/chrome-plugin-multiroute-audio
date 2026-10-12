@@ -18,7 +18,7 @@ This plan requires a visible desktop Chrome session and two browser-visible outp
 | Two independent routes | On 440 Hz tab choose another physical or virtual output and route it. | 220 Hz only on first path and 440 Hz only on second, verified with separate meters or loopback recordings. Hearing one device at a time is weaker evidence. |
 | Popup closure | Close popup, leave both tabs playing for at least one minute. | Whether both endpoint signals continue and whether reopened popup shows both routes. |
 | Silent source | Stop the 220 Hz page tone for five minutes, then restart it without restarting the route. | Track/context state during silence and whether the same endpoint resumes. |
-| Worker suspension | Close extension popup and service worker DevTools. Wait for Chrome to suspend the extension worker, using `chrome://extensions` or Chrome's worker inspection UI to confirm. Reopen popup. | Whether both routes continue during confirmed suspension and status reconciles after worker restart. Waiting alone does not prove suspension. |
+| Worker suspension | Close the extension popup **and fully close service worker DevTools before starting the idle timer**. Do not click **Inspect** during the wait; that wakes or keeps the worker active. Read only the inactive status on `chrome://extensions`, observe the routed outputs, then reopen the popup. | Whether both routes continue during confirmed suspension and status reconciles after worker restart. An open service worker inspector invalidates this check. |
 | Context interaction | Reload extension, restart a route using the toolbar click. | Whether `AudioContext.resume()` succeeds in the offscreen page without another user gesture; record exact exception if it fails. |
 | Setup permission sharing | Grant/select an output on setup page, reopen popup, then start a route to it. | Whether the offscreen engine enumerates and actually uses the same endpoint. |
 | Output switch | With both routes playing, switch one route in its source tab's popup. | Correct destination after switch and whether the other route is interrupted. |
@@ -29,6 +29,29 @@ This plan requires a visible desktop Chrome session and two browser-visible outp
 After each test run, click **Stop tone** on both fixture pages and stop any remaining extension routes. Start the tones again only when the next audio observation is ready.
 
 The fixture has fixed 220 Hz and 440 Hz sine sources at approximately -30 dBFS. It deliberately starts only after a page click to avoid autoplay restrictions. The tones are useful for identifying paths; they do not measure latency or prove a path unless separately captured or metered.
+
+## Baseline measurements
+
+Record the Chrome version, Windows build, output names shown in Chrome, driver or virtual-device versions, sample rates, and how each path was observed. The popup reports **start**, **switch**, and **stop command** round-trip times after each action. Copy those values before closing it. They measure extension command completion, **not audible latency**.
+
+For an audio-path comparison, record at least ten trials each of native playback, first route start, and output switch with a loopback or external recorder that can distinguish the destinations. Use the same tone source, output level, recorder, and timing method in every trial. Record the delay from the corresponding user action to the first stable signal at the destination, then report median and p95 for each condition. If the action and audio cannot be captured on a shared clock, report command times and audio observations separately rather than inventing an end-to-end latency number.
+
+For resource use, open Chrome Task Manager with **Shift+Esc** and record its CPU and memory readings for the extension/offscreen process, if Chrome exposes one, after 60 seconds at each state: no route, one route, two routes, and after stopping both routes. Note when Chrome combines processes or hides the offscreen document; do not attribute a shared process's usage solely to this extension. Keep the tones stopped between measurement runs.
+
+| Trial | Native action-to-signal ms | Start command ms | Start action-to-signal ms | Switch command ms | Switch action-to-signal ms | CPU / memory / process note |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 1 | | | | | | |
+| 2 | | | | | | |
+| 3 | | | | | | |
+| 4 | | | | | | |
+| 5 | | | | | | |
+| 6 | | | | | | |
+| 7 | | | | | | |
+| 8 | | | | | | |
+| 9 | | | | | | |
+| 10 | | | | | | |
+
+The report should include the raw readings or a link to them, the median and p95 calculation, and any unmeasurable field explicitly marked **untested**.
 
 For console diagnostics, open `chrome://extensions` and inspect the extension service worker or offscreen document. A route's popup state reports `AudioContext.state` and audio track `readyState`; these indicate a running graph, not physical audibility. Record exact Chrome errors without copying sensitive browsing data.
 

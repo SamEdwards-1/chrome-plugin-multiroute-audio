@@ -49,12 +49,16 @@ async function perform(type) {
   const buttons = [startButton, switchButton, stopButton];
   buttons.forEach(button => { button.disabled = true; });
   statusElement.textContent = `${type === "START" ? "Starting" : type === "STOP" ? "Stopping" : "Switching"}…`;
+  const commandStartedAt = performance.now();
   try {
     await request(type, { tabId: sourceTab.id, deviceId: outputElement.value });
+    const commandMs = Math.round(performance.now() - commandStartedAt);
     await refresh();
-    statusElement.textContent = type === "STOP" ? "Routing stopped; normal tab playback resumed." : "Route is running.";
+    const result = type === "STOP" ? "Routing stopped; normal tab playback resumed." : "Route is running.";
+    statusElement.textContent = `${result} ${type.toLowerCase()} command: ${commandMs} ms (not audio latency).`;
   } catch (error) {
-    statusElement.textContent = error.message;
+    const commandMs = Math.round(performance.now() - commandStartedAt);
+    statusElement.textContent = `${error.message} ${type.toLowerCase()} command failed after ${commandMs} ms.`;
     await refresh().catch(() => {});
   } finally {
     buttons.forEach(button => { button.disabled = false; });
