@@ -24,17 +24,21 @@ document.querySelector("#refresh").addEventListener("click", () => refresh().cat
 choose.addEventListener("click", async () => {
   try {
     const selected = await navigator.mediaDevices.selectAudioOutput();
-    status.textContent = `Selected ${selected.label || "an output"}. Reopen the source tab's popup to check whether the engine can use it.`;
     await refresh();
+    status.textContent = `Selected ${selected.label || "an output"}. Reopen the source tab's popup to check whether the engine can use it.`;
   } catch (error) { status.textContent = `${error.name}: ${error.message}`; }
 });
 document.querySelector("#microphone").addEventListener("click", async () => {
   let stream;
+  let result;
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-    status.textContent = "Temporary input access granted. The microphone track has been stopped; check which outputs are now visible.";
-  } catch (error) { status.textContent = `${error.name}: ${error.message}`; }
+    result = "Temporary input access granted. The microphone track has been stopped; check which outputs are now visible.";
+  } catch (error) { result = `${error.name}: ${error.message}`; }
   finally { stream?.getTracks().forEach(track => track.stop()); }
-  await refresh().catch(error => { status.textContent = error.message; });
+  try {
+    await refresh();
+    status.textContent = result;
+  } catch (error) { status.textContent = `${result} Output refresh failed: ${error.message}`; }
 });
 refresh().catch(error => { status.textContent = error.message; });
