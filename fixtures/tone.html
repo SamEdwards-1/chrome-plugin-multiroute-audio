@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Deterministic tone source</title></head>
+<body>
+  <h1>Deterministic tone source</h1>
+  <p id="frequency"></p>
+  <button id="toggle">Start tone</button>
+  <p>Use separate tabs with <code>?hz=220</code> and <code>?hz=440</code>. Each tab emits a sine wave at its stated frequency after Start tone is clicked. Volume is approximately -30 dBFS.</p>
+  <script>
+    const requested = Number(new URLSearchParams(location.search).get("hz"));
+    const hz = [220, 440].includes(requested) ? requested : 220;
+    document.querySelector("#frequency").textContent = `${hz} Hz sine wave`;
+    let context, oscillator;
+    document.querySelector("#toggle").addEventListener("click", async event => {
+      if (oscillator) {
+        oscillator.stop();
+        await context.close();
+        context = oscillator = undefined;
+        event.target.textContent = "Start tone";
+        return;
+      }
+      context = new AudioContext();
+      oscillator = context.createOscillator();
+      const gain = context.createGain();
+      gain.gain.value = 0.0316;
+      oscillator.frequency.value = hz;
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start();
+      await context.resume();
+      event.target.textContent = "Stop tone";
+    });
+  </script>
+</body></html>

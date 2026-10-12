@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Multiroute Audio</title><link rel="stylesheet" href="ui.css"></head>
+<body>
+  <main>
+    <h1>Multiroute Audio</h1>
+    <p id="source">Checking current tab…</p>
+    <label for="output">Audio output</label>
+    <select id="output"></select>
+    <div class="actions"><button id="start">Route this tab</button><button id="switch" hidden>Switch output</button><button id="stop" hidden>Stop route</button></div>
+    <p id="status" role="status" aria-live="polite"></p>
+    <h2>Active routes</h2><ul id="routes"></ul>
+    <p><a href="setup.html" target="_blank">Audio device access and diagnostics</a></p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
