@@ -1,6 +1,6 @@
 # Milestone 0 feasibility report
 
-Status: **No-go pending visible Chrome and hardware validation**. The source tree provides a real Chrome API path, but source review and syntax checks cannot prove endpoint isolation, permission behavior, or background playback.
+Status: **No-go pending completion of live validation**. The user loaded the prototype in Chrome and reported two working routes. The remaining cases below still need observation before a go decision.
 
 ## Implemented path
 
@@ -17,12 +17,12 @@ Status: **No-go pending visible Chrome and hardware validation**. The source tre
 | --- | --- | --- |
 | Manifest and scripts parse | Verified locally | JSON parse and JavaScript syntax checks. |
 | Concurrent start and stop ordering | Verified locally | `node --test tests/start-race.test.js` forces overlapping starts in both worker and engine, checks that explicit stop sends no early idle signal, and holds context closure open while two stops race. Starting the same tab during cleanup is rejected without a second capture. This does not prove browser behavior. |
-| Chrome loads unpacked extension | Untested | Requires visible Chrome extension load. |
-| One tab captures and renders to fixed output | Untested | Requires Chrome/hardware observation. |
-| Two tabs route to distinct endpoints without crossfeed | Untested | Requires separate endpoint meters or loopback capture. |
-| Popup closure preserves both routes | Untested | Requires live browser run. |
-| Worker truly suspends while audio continues | Untested | Requires observed worker termination and output monitoring. |
-| Five-minute source silence preserves capture | Untested | Requires timed live run. |
+| Chrome loads unpacked extension | User observed | User loaded the unpacked prototype in visible Chrome on 2026-10-12. Chrome version was not recorded. |
+| One tab captures and renders to fixed output | User reported | User routed both fixture tabs and said both worked. Exact endpoint names and meter evidence were not recorded. |
+| Two tabs route to distinct endpoints without crossfeed | User reported; not independently verified | User answered that both routes worked and that all was good when asked about separate meters and crossfeed. No meter trace or loopback recording was captured. |
+| Popup closure preserves both routes | User reported | User answered that all was good when asked whether the 440 Hz route continued after popup closure. Duration and meter trace were not recorded. |
+| Worker truly suspends while audio continues | Inconclusive | User saw an inactive worker label but opened service worker DevTools during the check, which may have woken or held the worker active. Repeat without opening its inspector and observe routed output. |
+| Five-minute source silence preserves capture | Awaiting output observation | An initial run was inconclusive when its fixture tabs disappeared. In a second run, the routed 220 Hz fixture stayed open and silent from 15:06:48 to after 15:11:48 UTC on 2026-10-12, then its tone was restarted without touching the route. Physical output recovery has not yet been confirmed. |
 | Offscreen `AudioContext.resume()` succeeds from toolbar invocation | Untested | Requires live run and exact error capture if denied. |
 | Setup-page output permission carries to offscreen engine | Untested | Requires selection/grant followed by offscreen use. |
 | No-microphone system can route to default and discover outputs | Untested | Requires qualifying machine or disabled-input setup. |
