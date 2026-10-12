@@ -23,7 +23,7 @@ This plan requires a visible desktop Chrome session and two browser-visible outp
 | Setup permission sharing | Grant/select an output on setup page, reopen popup, then start a route to it. | Whether the offscreen engine enumerates and actually uses the same endpoint. |
 | Output switch | With both routes playing, switch one route in its source tab's popup. | Correct destination after switch and whether the other route is interrupted. |
 | Output loss | With a fixed route active, disconnect or disable its endpoint. | Context state, audible/meter path, any Chrome fallback, and both the selected and browser-reported sink labels in the popup. A reported sink ID does not prove the physical path. This prototype has no output-loss monitor, so failover may occur. |
-| Stop cleanup | Stop each route in its source tab's popup. | Native playback returns, no duplicate path, and offscreen document closes after the last route. |
+| Stop cleanup | From a third, unrelated tab, use each **Stop route** button in the popup's **Active routes** list. | Only the chosen route stops, its source tab returns to native playback, the other route continues, and the offscreen document closes after the last route. |
 | No microphone | Repeat discovery and default routing on a system without usable audio input or with input permission denied. | Available endpoints, permission errors, and whether default output still works. |
 
 After each test run, click **Stop tone** on both fixture pages and stop any remaining extension routes. Start the tones again only when the next audio observation is ready.

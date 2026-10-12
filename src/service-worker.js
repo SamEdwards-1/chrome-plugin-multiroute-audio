@@ -61,7 +61,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
     if (message.type === "START") return start(message.tabId, message.deviceId);
     if (message.type === "SNAPSHOT" && !(await chrome.offscreen.hasDocument())) return { ok: true, routes: [] };
-    if (message.type === "OUTPUTS") return engine("OUTPUTS");
+    if (message.type === "OUTPUTS") {
+      try { return await engine("OUTPUTS"); }
+      finally { await maybeCloseOffscreen().catch(() => {}); }
+    }
     if (message.type === "SNAPSHOT") return engine("SNAPSHOT");
     if (message.type === "STOP" || message.type === "SWITCH") {
       if (!Number.isInteger(message.tabId)) throw new Error("Invalid tab.");

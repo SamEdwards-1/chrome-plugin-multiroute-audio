@@ -1,12 +1,21 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audio device access</title><link rel="stylesheet" href="ui.css"><style>body { width: auto; max-width: 720px; margin: 20px auto; }</style></head>
-<body><main>
-  <h1>Audio device access</h1>
-  <p>Chrome only offers outputs it can enumerate and use. A hardware channel is selectable only when its driver exposes a separate browser output endpoint.</p>
-  <div class="actions"><button id="refresh">Refresh outputs</button><button id="choose">Choose an output</button><button id="microphone">Reveal outputs using microphone permission</button></div>
-  <p>The microphone action asks Chrome for temporary input access to reveal device labels. The temporary track is stopped immediately and is never connected to a route. You can decline and still try the system default.</p>
-  <p id="status" role="status" aria-live="polite"></p>
-  <h2>Outputs visible to this page</h2><ul id="outputs"></ul>
-  <p>After choosing or granting access, return to the source tab, reopen the toolbar popup, and refresh the output list by reopening it.</p>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audio device access</title><link rel="stylesheet" href="ui.css"></head>
+<body class="setup-page"><main>
+  <header class="app-header">
+    <p class="eyebrow">Device diagnostics</p>
+    <h1>Audio device access</h1>
+    <p class="lead">Chrome offers the outputs it can enumerate and use. A hardware channel appears separately only when its driver exposes a separate browser output endpoint.</p>
+  </header>
+  <section class="card" aria-labelledby="discovery-heading">
+    <h2 id="discovery-heading">Find available outputs</h2>
+    <div class="actions"><button id="refresh">Refresh outputs</button><button id="choose">Choose an output</button><button id="microphone">Reveal outputs using microphone permission</button></div>
+    <div class="note"><strong>Temporary microphone access</strong><p>This action asks Chrome for input access to reveal device labels. The temporary track stops immediately and is never connected to a route. You can decline and still try the system default.</p></div>
+    <p id="status" role="status" aria-live="polite"></p>
+  </section>
+  <section class="card" aria-labelledby="outputs-heading">
+    <h2 id="outputs-heading">Outputs visible to this page</h2>
+    <ul id="outputs"></ul>
+  </section>
+  <p class="footer">After choosing or granting access, return to the source tab and reopen the toolbar popup to refresh its output list.</p>
 </main><script src="setup.js"></script></body></html>

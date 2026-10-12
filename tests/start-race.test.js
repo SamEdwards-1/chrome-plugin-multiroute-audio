@@ -18,6 +18,34 @@ function dispatch(listener, message) {
   return new Promise(resolve => listener(message, { id: "extension-id" }, resolve));
 }
 
+test("output discovery closes an idle offscreen document after the last route", async () => {
+  let listener;
+  let documentOpen = false;
+  let closed = 0;
+  const chrome = {
+    runtime: {
+      id: "extension-id",
+      onMessage: { addListener(callback) { listener = callback; } },
+      async sendMessage(message) {
+        if (message.type === "OUTPUTS") return { ok: true, outputs: [{ deviceId: "", label: "System default" }] };
+        if (message.type === "SNAPSHOT") return { ok: true, routes: [], stopping: 0 };
+        throw new Error(`Unexpected command ${message.type}`);
+      }
+    },
+    offscreen: {
+      async hasDocument() { return documentOpen; },
+      async createDocument() { documentOpen = true; },
+      async closeDocument() { documentOpen = false; closed++; }
+    },
+    tabs: { onRemoved: { addListener() {} } }
+  };
+  loadScript("service-worker.js", { chrome });
+  const result = await dispatch(listener, { target: "worker", type: "OUTPUTS" });
+  assert.equal(result.outputs[0].label, "System default");
+  assert.equal(documentOpen, false);
+  assert.equal(closed, 1);
+});
+
 test("worker reserves a tab before async eligibility checks", async () => {
   const tabLookup = deferred();
   let listener;

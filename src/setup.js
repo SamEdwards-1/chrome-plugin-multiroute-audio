@@ -13,6 +13,7 @@ async function refresh() {
   }
   if (!outputs.length) {
     const item = document.createElement("li");
+    item.className = "empty-state";
     item.textContent = "No outputs exposed by Chrome.";
     list.append(item);
   }

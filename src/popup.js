@@ -14,7 +14,8 @@ async function request(type, details = {}) {
 }
 
 async function refresh() {
-  const [outputResult, routeResult] = await Promise.all([request("OUTPUTS"), request("SNAPSHOT")]);
+  const routeResult = await request("SNAPSHOT");
+  const outputResult = await request("OUTPUTS");
   const prior = outputElement.value;
   outputElement.replaceChildren();
   for (const output of outputResult.outputs) {
@@ -34,37 +35,82 @@ async function refresh() {
   routesElement.replaceChildren();
   for (const item of routeResult.routes) {
     const row = document.createElement("li");
-    const label = outputResult.outputs.find(output => output.deviceId === item.deviceId)?.label || "Unavailable output";
+    row.className = "route-item";
+    const selectedOutput = outputResult.outputs.find(output => output.deviceId === item.deviceId);
+    const label = selectedOutput?.label || "Unavailable output";
     const sinkLabel = item.sinkId === null ? "not reported" :
       item.sinkId === "" || item.sinkId === "default" ? "System default" :
       outputResult.outputs.find(output => output.deviceId === item.sinkId)?.label || "unavailable or changed output";
-    row.textContent = `Tab ${item.tabId}: selected ${label}; browser sink ${sinkLabel}; context ${item.contextState}; track ${item.trackState}`;
+    const healthy = item.contextState === "running" && item.trackState === "live" && Boolean(selectedOutput);
+    if (!healthy) row.classList.add("is-warning");
+
+    const heading = document.createElement("div");
+    heading.className = "route-heading";
+    const tab = document.createElement("span");
+    tab.className = "route-tab";
+    tab.textContent = `Tab ${item.tabId}`;
+    const state = document.createElement("span");
+    state.className = "route-state";
+    state.textContent = healthy ? "Graph running" : "Check route";
+    heading.append(tab, state);
+
+    const destination = document.createElement("p");
+    destination.className = "route-destination";
+    destination.textContent = label;
+    const sink = document.createElement("p");
+    sink.className = "route-sink";
+    sink.textContent = `Chrome sink: ${sinkLabel}`;
+    const meta = document.createElement("div");
+    meta.className = "route-meta";
+    for (const [name, value] of [["Context", item.contextState], ["Track", item.trackState]]) {
+      const chip = document.createElement("span");
+      chip.textContent = `${name}: ${value}`;
+      meta.append(chip);
+    }
+    const footer = document.createElement("div");
+    footer.className = "route-footer";
+    const consequence = document.createElement("span");
+    consequence.textContent = "Stop returns normal tab playback";
+    const stopRoute = document.createElement("button");
+    stopRoute.type = "button";
+    stopRoute.className = "route-stop";
+    stopRoute.textContent = "Stop route";
+    stopRoute.setAttribute("aria-label", `Stop route for Tab ${item.tabId}; return to normal playback`);
+    stopRoute.addEventListener("click", () => perform("STOP", item.tabId));
+    footer.append(consequence, stopRoute);
+    row.append(heading, destination, sink, meta, footer);
     routesElement.append(row);
   }
   if (!routeResult.routes.length) {
     const row = document.createElement("li");
-    row.textContent = "None";
+    row.className = "empty-state";
+    row.textContent = "No active routes";
     routesElement.append(row);
   }
 }
 
-async function perform(type) {
-  const buttons = [startButton, switchButton, stopButton];
+async function perform(type, tabId = sourceTab?.id) {
+  if (!Number.isInteger(tabId)) {
+    statusElement.textContent = "No tab is available for this action.";
+    return;
+  }
+  const buttons = [startButton, switchButton, stopButton, ...routesElement.querySelectorAll(".route-stop")];
+  const priorDisabled = buttons.map(button => button.disabled);
   buttons.forEach(button => { button.disabled = true; });
-  statusElement.textContent = `${type === "START" ? "Starting" : type === "STOP" ? "Stopping" : "Switching"}…`;
+  statusElement.textContent = `${type === "START" ? "Starting" : type === "STOP" ? "Stopping" : "Switching"} route for Tab ${tabId}…`;
   const commandStartedAt = performance.now();
   try {
-    await request(type, { tabId: sourceTab.id, deviceId: outputElement.value });
+    await request(type, { tabId, deviceId: outputElement.value });
     const commandMs = Math.round(performance.now() - commandStartedAt);
     await refresh();
-    const result = type === "STOP" ? "Routing stopped; normal tab playback resumed." : "Route is running.";
+    const result = type === "STOP" ? `Stopped route for Tab ${tabId}; normal tab playback resumed.` : "Route is running.";
     statusElement.textContent = `${result} ${type.toLowerCase()} command: ${commandMs} ms (not audio latency).`;
   } catch (error) {
     const commandMs = Math.round(performance.now() - commandStartedAt);
     statusElement.textContent = `${error.message} ${type.toLowerCase()} command failed after ${commandMs} ms.`;
     await refresh().catch(() => {});
   } finally {
-    buttons.forEach(button => { button.disabled = false; });
+    buttons.forEach((button, index) => { button.disabled = priorDisabled[index]; });
   }
 }
 

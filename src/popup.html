@@ -1,16 +1,24 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Multiroute Audio</title><link rel="stylesheet" href="ui.css"></head>
-<body>
+<body class="popup-page">
   <main>
-    <h1>Multiroute Audio</h1>
-    <p id="source">Checking current tab…</p>
-    <label for="output">Audio output</label>
-    <select id="output"></select>
-    <div class="actions"><button id="start">Route this tab</button><button id="switch" hidden>Switch output</button><button id="stop" hidden>Stop route</button></div>
-    <p id="status" role="status" aria-live="polite"></p>
-    <h2>Active routes</h2><ul id="routes"></ul>
-    <p><a href="setup.html" target="_blank">Audio device access and diagnostics</a></p>
+    <header class="app-header">
+      <p class="eyebrow">Audio routing</p>
+      <h1>Multiroute Audio</h1>
+      <p class="source-line">Source tab<strong id="source">Checking current tab…</strong></p>
+    </header>
+    <section class="card" aria-label="Route controls">
+      <label class="section-label" for="output">Audio output</label>
+      <select id="output"></select>
+      <div class="actions"><button id="start">Route this tab</button><button id="switch" hidden>Switch output</button><button id="stop" hidden>Stop route</button></div>
+      <p id="status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="card" aria-labelledby="routes-heading">
+      <h2 id="routes-heading">Active routes</h2>
+      <ul id="routes"></ul>
+    </section>
+    <p class="footer"><a href="setup.html" target="_blank">Audio device access and diagnostics</a></p>
   </main>
   <script src="popup.js"></script>
 </body>
