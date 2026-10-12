@@ -1,6 +1,6 @@
 # Milestone 0 feasibility report
 
-Status: **No-go pending completion of live validation**. The user loaded the prototype in Chrome and reported two working routes. The remaining cases below still need observation before a go decision.
+Status: **Provisional architecture pass on one user-observed setup; Milestone 0 acceptance remains open.** The user reported two working routes to distinct outputs, playback after popup closure, and recovery after long source silence. Confirmed worker suspension and the failure/measurement matrix remain unobserved. This is sufficient to continue design work, but not to claim qualified compatibility or public-release readiness.
 
 ## Implemented path
 
@@ -18,7 +18,7 @@ Host inventory on 2026-10-12 showed Windows version `10.0.26200.0` and an instal
 | Claim | Status | Evidence or missing check |
 | --- | --- | --- |
 | Manifest and scripts parse | Verified locally | JSON parse and JavaScript syntax checks. |
-| Concurrent start and stop ordering | Verified locally | `node --test tests/start-race.test.js` forces overlapping starts in both worker and engine, checks that explicit stop sends no early idle signal, and holds context closure open while two stops race. Starting the same tab during cleanup is rejected without a second capture. This does not prove browser behavior. |
+| Concurrent start and stop ordering | Verified locally | `node --test tests/*.test.js` forces overlapping starts in both worker and engine, checks that explicit stop sends no early idle signal, and holds context closure open while two stops race. Starting the same tab during cleanup is rejected without a second capture. This does not prove browser behavior. |
 | Worker restart state recovery | Verified in a mocked lifecycle test | A new service-worker VM reads the surviving offscreen engine's route snapshot and avoids capturing that tab a second time. This does not prove real Chrome worker suspension. |
 | Chrome loads unpacked extension | User observed | User loaded the unpacked prototype in visible Chrome on 2026-10-12. Chrome version was not recorded. |
 | One tab captures and renders to fixed output | User reported | User routed both fixture tabs and said both worked. Exact endpoint names and meter evidence were not recorded. |
@@ -30,14 +30,14 @@ Host inventory on 2026-10-12 showed Windows version `10.0.26200.0` and an instal
 | Setup-page output discovery | Verified from user screenshot | The separate diagnostics page listed multiple distinct browser-visible outputs, including analog, ADAT, S/PDIF, and display-audio paths. **Choose an output** was disabled, and the page stated that Chrome did not expose a dedicated output picker in this session. No microphone grant was needed to display these labels. |
 | Setup-page output permission carries to offscreen engine | Picker path unavailable in this Chrome session | Because `selectAudioOutput()` was unavailable, no setup-page picker grant could be transferred. Previously visible fixed outputs were selectable in the popup and the user reported that two routes worked. |
 | Optional microphone-permission fallback | User reported success; effect unmeasured | User reported that **Reveal outputs using microphone permission** worked. The output list before and after was not recorded, and live release of the temporary input track was not independently observed. Source code stops each temporary track in `finally`. |
-| No-microphone system can route to default and discover outputs | Untested | Requires qualifying machine or disabled-input setup. |
-| Fixed-output loss remains silent and recoverable | Not implemented | Prototype records Chrome behavior; production policy belongs to later reliability work. |
+| No-microphone system can route to default and discover outputs | Mocked failure path passes; live behavior untested | A setup-page test rejects temporary microphone access and confirms the previously enumerated output remains visible; a later successful grant stops its temporary track. This does not establish physical no-input behavior in Chrome. |
+| Fixed-output loss remains silent and recoverable | Live behavior untested; recovery policy not implemented | Probe disconnect/reconnect and Chrome fallback before making a device-loss claim. Production monitoring/recovery belongs to later reliability work. |
 
 No Chrome version, OS/device combination, physical output path, or driver behavior is claimed as qualified by this report yet. A Windows device inventory can identify candidate endpoints but does not establish their visibility or use in Chrome.
 
 ## Recommendation
 
-Keep milestone 0 open until the [manual validation plan](feasibility-manual.md) passes on a visible Windows Chrome machine. The core architecture remains plausible, but an implementation decision should depend on measured output isolation and permission propagation. If either fails, investigate an alternative permission or rendering path before building the full UI.
+Treat the core architecture as provisionally feasible on the user's observed setup. Keep formal milestone acceptance open until the [manual validation plan](feasibility-manual.md) confirms playback through real worker suspension with DevTools closed and records the environment and remaining failure cases. The dedicated output picker is unavailable in the tested Chrome session, so permission sharing through that picker cannot be required for this configuration; the visible fixed outputs and optional microphone path are the supported observations. Device-loss and no-input results should determine supported-platform and recovery claims, not erase the two-route success already observed. Do not describe the extension as release-ready from this report.
 
 ## Prototype limits
 
