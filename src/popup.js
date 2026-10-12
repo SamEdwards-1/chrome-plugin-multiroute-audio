@@ -46,15 +46,30 @@ async function refresh() {
 
     const heading = document.createElement("div");
     heading.className = "route-heading";
-    const tab = document.createElement("span");
-    tab.className = "route-tab";
-    tab.textContent = `Tab ${item.tabId}`;
+    const tabName = typeof item.tabTitle === "string" && item.tabTitle.trim() ? item.tabTitle : `Tab ${item.tabId}`;
     const focusTab = document.createElement("button");
     focusTab.type = "button";
     focusTab.className = "route-focus";
-    focusTab.textContent = "→";
-    focusTab.setAttribute("aria-label", `Go to Tab ${item.tabId}`);
-    focusTab.setAttribute("title", `Go to Tab ${item.tabId}`);
+    focusTab.setAttribute("aria-label", `Go to ${tabName}, Tab ${item.tabId}`);
+    focusTab.setAttribute("title", `Go to ${tabName}`);
+    const focusName = document.createElement("span");
+    focusName.className = "route-name";
+    focusName.textContent = tabName;
+    const focusIcon = document.createElement("span");
+    focusIcon.className = "route-link-icon";
+    focusIcon.setAttribute("aria-hidden", "true");
+    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    arrow.setAttribute("viewBox", "0 0 24 24");
+    arrow.setAttribute("fill", "none");
+    arrow.setAttribute("stroke", "currentColor");
+    arrow.setAttribute("stroke-width", "2");
+    arrow.setAttribute("stroke-linecap", "round");
+    arrow.setAttribute("stroke-linejoin", "round");
+    const arrowPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    arrowPath.setAttribute("d", "M5 12h14m-6-6 6 6-6 6");
+    arrow.append(arrowPath);
+    focusIcon.append(arrow);
+    focusTab.append(focusName, focusIcon);
     focusTab.addEventListener("click", async () => {
       focusTab.disabled = true;
       try {
@@ -65,13 +80,10 @@ async function refresh() {
         focusTab.disabled = false;
       }
     });
-    const tabActions = document.createElement("div");
-    tabActions.className = "route-tab-actions";
-    tabActions.append(tab, focusTab);
     const state = document.createElement("span");
     state.className = "route-state";
     state.textContent = healthy ? "Graph running" : "Check route";
-    heading.append(tabActions, state);
+    heading.append(focusTab, state);
 
     const destination = document.createElement("p");
     destination.className = "route-destination";

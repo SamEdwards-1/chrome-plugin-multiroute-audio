@@ -3,8 +3,8 @@ const startingTabs = new Set();
 const stoppingTabs = new Map();
 
 function snapshot() {
-  return { ok: true, stopping: stoppingTabs.size, routes: [...routes.values()].map(({ tabId, deviceId, context, track }) => ({
-    tabId, deviceId, contextState: context.state, trackState: track.readyState,
+  return { ok: true, stopping: stoppingTabs.size, routes: [...routes.values()].map(({ tabId, tabTitle, deviceId, context, track }) => ({
+    tabId, tabTitle, deviceId, contextState: context.state, trackState: track.readyState,
     sinkId: typeof context.sinkId === "string" ? context.sinkId : null
   })) };
 }
@@ -44,7 +44,7 @@ function stop(tabId, notifyIdle = false) {
   return pending;
 }
 
-async function start(tabId, streamId, deviceId) {
+async function start(tabId, streamId, deviceId, tabTitle) {
   if (!Number.isInteger(tabId) || typeof streamId !== "string" || !streamId || typeof deviceId !== "string") {
     throw new Error("Invalid start parameters.");
   }
@@ -71,7 +71,7 @@ async function start(tabId, streamId, deviceId) {
     source.connect(gain).connect(context.destination);
     await context.resume();
     if (context.state !== "running") throw new Error(`AudioContext is ${context.state}; user interaction may be required.`);
-    const route = { tabId, deviceId, context, stream, track, source, gain };
+    const route = { tabId, tabTitle: typeof tabTitle === "string" ? tabTitle.slice(0, 160) : "", deviceId, context, stream, track, source, gain };
     routes.set(tabId, route);
     track.onended = () => stop(tabId, true).catch(() => {});
     gain.gain.setTargetAtTime(1, context.currentTime, 0.015);
@@ -100,7 +100,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
     if (message.type === "SNAPSHOT") return snapshot();
     if (message.type === "OUTPUTS") return outputs();
-    if (message.type === "START") return start(message.tabId, message.streamId, message.deviceId);
+    if (message.type === "START") return start(message.tabId, message.streamId, message.deviceId, message.tabTitle);
     if (message.type === "STOP") return stop(message.tabId);
     if (message.type === "SWITCH") return changeOutput(message.tabId, message.deviceId);
     throw new Error("Unknown engine command.");

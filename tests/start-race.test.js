@@ -78,7 +78,7 @@ test("worker reserves a tab before async eligibility checks", async () => {
       async sendMessage(message) {
         if (message.type === "SNAPSHOT") return { ok: true, routes: activeRoutes };
         if (message.type === "START") {
-          activeRoutes = [{ tabId: message.tabId }];
+          activeRoutes = [{ tabId: message.tabId, tabTitle: message.tabTitle }];
           return { ok: true, routes: activeRoutes };
         }
         throw new Error(`Unexpected command ${message.type}`);
@@ -96,9 +96,10 @@ test("worker reserves a tab before async eligibility checks", async () => {
   const second = await dispatch(listener, { target: "worker", type: "START", tabId: 7, deviceId: "" });
   assert.equal(second.ok, false);
   assert.match(second.error, /already starting/);
-  tabLookup.resolve({ url: "http://localhost:8765/fixtures/tone.html" });
+  tabLookup.resolve({ url: "http://localhost:8765/fixtures/tone.html", title: "220 Hz tone" });
   assert.equal((await first).ok, true);
   assert.equal(captures, 1);
+  assert.equal(activeRoutes[0].tabTitle, "220 Hz tone");
 });
 
 test("a restarted worker recovers routes from the surviving offscreen engine", async () => {
@@ -163,7 +164,7 @@ test("offscreen engine rejects overlapping captures and acknowledges stop before
     async getUserMedia() { captureCalls++; return mediaStart.promise; }
   } };
   loadScript("offscreen.js", { chrome, navigator, AudioContext: FakeAudioContext });
-  const request = { target: "engine", type: "START", tabId: 7, streamId: "single-use", deviceId: "" };
+  const request = { target: "engine", type: "START", tabId: 7, streamId: "single-use", deviceId: "", tabTitle: "220 Hz tone" };
   const first = dispatch(listener, request);
   const second = await dispatch(listener, request);
   assert.equal(second.ok, false);
@@ -171,7 +172,9 @@ test("offscreen engine rejects overlapping captures and acknowledges stop before
   assert.equal(captureCalls, 1);
   assert.equal(contexts, 1);
   mediaStart.resolve(stream);
-  assert.equal((await first).routes.length, 1);
+  const started = await first;
+  assert.equal(started.routes.length, 1);
+  assert.equal(started.routes[0].tabTitle, "220 Hz tone");
 
   const stopped = await dispatch(listener, { target: "engine", type: "STOP", tabId: 7 });
   assert.equal(stopped.ok, true);

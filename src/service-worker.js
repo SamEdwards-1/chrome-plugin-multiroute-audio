@@ -47,7 +47,8 @@ async function start(tabId, deviceId) {
     if (existing.routes.some(route => route.tabId === tabId)) return existing;
     // The popup's action invocation grants activeTab for its frozen source tab.
     const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
-    const result = await engine("START", { tabId, streamId, deviceId });
+    const tabTitle = typeof tab.title === "string" ? tab.title.trim().slice(0, 160) : "";
+    const result = await engine("START", { tabId, streamId, deviceId, tabTitle });
     if (!result?.ok) throw new Error(result?.error || "Audio engine could not start.");
     return result;
   } finally {

@@ -131,19 +131,27 @@ li {
 #routes li { margin: 0; }
 .route-item { padding: 13px 14px; }
 .route-item.is-warning { border-left-color: var(--orange); }
-.route-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.route-tab-actions { display: flex; align-items: center; gap: 8px; }
-.route-tab { color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.route-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
 .route-focus {
-  min-width: 28px;
-  min-height: 26px;
-  padding: 0 6px 2px;
-  border-color: var(--violet);
-  color: var(--violet);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+  min-height: 30px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: var(--blue);
   background: transparent;
-  font-size: 19px;
-  line-height: 1;
+  font-size: 12px;
+  text-align: left;
 }
+.route-focus:not(:disabled):hover { border-color: transparent; color: var(--text); background: transparent; }
+.route-name { min-width: 0; overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: #5b7584; text-underline-offset: 3px; }
+.route-link-icon { display: grid; flex: none; place-items: center; width: 23px; height: 23px; border: 1px solid #6085a0; border-radius: 50%; background: #243743; }
+.route-link-icon svg { width: 14px; height: 14px; }
+.route-focus:not(:disabled):hover .route-link-icon { border-color: var(--blue); background: #315067; }
 .route-state {
   padding: 3px 8px;
   border: 1px solid #2b5135;

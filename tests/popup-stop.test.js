@@ -45,9 +45,10 @@ test("an unrelated tab can stop a route from the active-routes list", async () =
   const elements = Object.fromEntries(ids.map(id => [id, new Element(id === "output" ? "select" : "div")]));
   const document = {
     querySelector(selector) { return elements[selector.slice(1)]; },
-    createElement(tag) { return new Element(tag); }
+    createElement(tag) { return new Element(tag); },
+    createElementNS(_namespace, tag) { return new Element(tag); }
   };
-  let routes = [{ tabId: 7, deviceId: "fixed-output", sinkId: "fixed-output", contextState: "running", trackState: "live" }];
+  let routes = [{ tabId: 7, tabTitle: "Example music page", deviceId: "fixed-output", sinkId: "fixed-output", contextState: "running", trackState: "live" }];
   const stopped = [];
   const focused = [];
   const chrome = {
@@ -82,8 +83,9 @@ test("an unrelated tab can stop a route from the active-routes list", async () =
   assert.equal(elements.start.disabled, true, "the current Chrome page is not routable");
   const focusOtherTab = elements.routes.querySelectorAll(".route-focus")[0];
   assert.ok(focusOtherTab);
-  assert.equal(focusOtherTab.textContent, "→");
-  assert.equal(focusOtherTab.attributes["aria-label"], "Go to Tab 7");
+  assert.equal(focusOtherTab.children[0].textContent, "Example music page");
+  assert.equal(focusOtherTab.children[1].children[0].tag, "svg");
+  assert.equal(focusOtherTab.attributes["aria-label"], "Go to Example music page, Tab 7");
   await focusOtherTab.click();
   assert.deepEqual(focused, [7]);
   assert.deepEqual(stopped, [], "focusing must leave the route running");
