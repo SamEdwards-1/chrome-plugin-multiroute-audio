@@ -60,6 +60,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (sender.id !== chrome.runtime.id || message?.target !== "worker") return;
   (async () => {
     if (message.type === "START") return start(message.tabId, message.deviceId);
+    if (message.type === "FOCUS_TAB") {
+      if (!Number.isInteger(message.tabId) || message.tabId < 0) throw new Error("Invalid tab.");
+      const tab = await chrome.tabs.update(message.tabId, { active: true });
+      await chrome.windows.update(tab.windowId, { focused: true });
+      return { ok: true };
+    }
     if (message.type === "SNAPSHOT" && !(await chrome.offscreen.hasDocument())) return { ok: true, routes: [] };
     if (message.type === "OUTPUTS") {
       try { return await engine("OUTPUTS"); }

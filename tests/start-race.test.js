@@ -18,6 +18,26 @@ function dispatch(listener, message) {
   return new Promise(resolve => listener(message, { id: "extension-id" }, resolve));
 }
 
+test("focus route activates its tab and brings its window forward", async () => {
+  let listener;
+  const calls = [];
+  const chrome = {
+    runtime: { id: "extension-id", onMessage: { addListener(callback) { listener = callback; } } },
+    tabs: {
+      async update(tabId, options) {
+        calls.push(["tab", tabId, options.active]);
+        return { id: tabId, windowId: 4 };
+      },
+      onRemoved: { addListener() {} }
+    },
+    windows: { async update(windowId, options) { calls.push(["window", windowId, options.focused]); } }
+  };
+  loadScript("service-worker.js", { chrome });
+  assert.equal((await dispatch(listener, { target: "worker", type: "FOCUS_TAB", tabId: 7 })).ok, true);
+  assert.deepEqual(calls, [["tab", 7, true], ["window", 4, true]]);
+  assert.equal((await dispatch(listener, { target: "worker", type: "FOCUS_TAB", tabId: -1 })).ok, false);
+});
+
 test("output discovery closes an idle offscreen document after the last route", async () => {
   let listener;
   let documentOpen = false;

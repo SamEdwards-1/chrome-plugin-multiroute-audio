@@ -49,6 +49,7 @@ test("an unrelated tab can stop a route from the active-routes list", async () =
   };
   let routes = [{ tabId: 7, deviceId: "fixed-output", sinkId: "fixed-output", contextState: "running", trackState: "live" }];
   const stopped = [];
+  const focused = [];
   const chrome = {
     tabs: { async query() { return [{ id: 99, title: "Extensions", url: "chrome://extensions" }]; } },
     runtime: {
@@ -63,6 +64,10 @@ test("an unrelated tab can stop a route from the active-routes list", async () =
           routes = routes.filter(route => route.tabId !== message.tabId);
           return { ok: true, routes };
         }
+        if (message.type === "FOCUS_TAB") {
+          focused.push(message.tabId);
+          return { ok: true };
+        }
         throw new Error(`Unexpected command ${message.type}`);
       }
     }
@@ -75,6 +80,13 @@ test("an unrelated tab can stop a route from the active-routes list", async () =
   assert.ok(stopOtherRoute);
   assert.match(stopOtherRoute.attributes["aria-label"], /Tab 7/);
   assert.equal(elements.start.disabled, true, "the current Chrome page is not routable");
+  const focusOtherTab = elements.routes.querySelectorAll(".route-focus")[0];
+  assert.ok(focusOtherTab);
+  assert.equal(focusOtherTab.textContent, "→");
+  assert.equal(focusOtherTab.attributes["aria-label"], "Go to Tab 7");
+  await focusOtherTab.click();
+  assert.deepEqual(focused, [7]);
+  assert.deepEqual(stopped, [], "focusing must leave the route running");
   await stopOtherRoute.click();
 
   assert.deepEqual(stopped, [7]);

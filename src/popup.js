@@ -49,10 +49,29 @@ async function refresh() {
     const tab = document.createElement("span");
     tab.className = "route-tab";
     tab.textContent = `Tab ${item.tabId}`;
+    const focusTab = document.createElement("button");
+    focusTab.type = "button";
+    focusTab.className = "route-focus";
+    focusTab.textContent = "→";
+    focusTab.setAttribute("aria-label", `Go to Tab ${item.tabId}`);
+    focusTab.setAttribute("title", `Go to Tab ${item.tabId}`);
+    focusTab.addEventListener("click", async () => {
+      focusTab.disabled = true;
+      try {
+        await request("FOCUS_TAB", { tabId: item.tabId });
+      } catch (error) {
+        statusElement.textContent = `Could not focus Tab ${item.tabId}: ${error.message}`;
+      } finally {
+        focusTab.disabled = false;
+      }
+    });
+    const tabActions = document.createElement("div");
+    tabActions.className = "route-tab-actions";
+    tabActions.append(tab, focusTab);
     const state = document.createElement("span");
     state.className = "route-state";
     state.textContent = healthy ? "Graph running" : "Check route";
-    heading.append(tab, state);
+    heading.append(tabActions, state);
 
     const destination = document.createElement("p");
     destination.className = "route-destination";
