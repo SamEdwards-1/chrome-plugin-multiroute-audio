@@ -13,6 +13,8 @@ Status: **No-go pending completion of live validation**. The user loaded the pro
 
 ## Evidence status
 
+Host inventory on 2026-10-12 showed Windows version `10.0.26200.0` and an installed Chrome executable version `154.0.8037.98`. The active browser's `chrome://version` page was not checked. Chrome-visible endpoint labels, driver versions, sample rates, and loopback or meter traces have not been recorded, so this is not yet a qualified hardware configuration.
+
 | Claim | Status | Evidence or missing check |
 | --- | --- | --- |
 | Manifest and scripts parse | Verified locally | JSON parse and JavaScript syntax checks. |
@@ -24,7 +26,8 @@ Status: **No-go pending completion of live validation**. The user loaded the pro
 | Popup closure preserves both routes | User reported | User answered that all was good when asked whether the 440 Hz route continued after popup closure. Duration and meter trace were not recorded. |
 | Worker truly suspends while audio continues | Untested | User later clarified that service worker DevTools was open throughout the live runs. That keeps the worker awake, so the observed routing does not establish survival of worker suspension. Repeat with DevTools fully closed before the idle interval. |
 | Five-minute source silence preserves capture | User observed pass | An initial run was inconclusive when its fixture tabs disappeared. In a second run, the routed 220 Hz fixture stayed open and silent from 15:06:48 to after 15:11:48 UTC on 2026-10-12, then its tone was restarted without touching the route. User reported 220 Hz returned on its original selected output and 440 Hz stayed on its own. |
-| Offscreen `AudioContext.resume()` succeeds from toolbar invocation | Untested | Requires live run and exact error capture if denied. |
+| Offscreen `AudioContext.resume()` succeeds from toolbar invocation | Inferred pass from live routing | The engine awaits `context.resume()` and rejects a non-running context before reporting route success. The user's working fixed-output routes therefore imply that this call succeeded in the tested Chrome session; no separate context trace was saved. |
+| Setup-page output discovery | User reported pass | With tones stopped, the visible setup page showed an enabled **Choose an output** button and listed both outputs used in the earlier routing test. The output picker was not yet exercised in this observation. |
 | Setup-page output permission carries to offscreen engine | Untested | Requires selection/grant followed by offscreen use. |
 | No-microphone system can route to default and discover outputs | Untested | Requires qualifying machine or disabled-input setup. |
 | Fixed-output loss remains silent and recoverable | Not implemented | Prototype records Chrome behavior; production policy belongs to later reliability work. |
