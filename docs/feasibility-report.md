@@ -17,6 +17,7 @@ Status: **No-go pending completion of live validation**. The user loaded the pro
 | --- | --- | --- |
 | Manifest and scripts parse | Verified locally | JSON parse and JavaScript syntax checks. |
 | Concurrent start and stop ordering | Verified locally | `node --test tests/start-race.test.js` forces overlapping starts in both worker and engine, checks that explicit stop sends no early idle signal, and holds context closure open while two stops race. Starting the same tab during cleanup is rejected without a second capture. This does not prove browser behavior. |
+| Worker restart state recovery | Verified in a mocked lifecycle test | A new service-worker VM reads the surviving offscreen engine's route snapshot and avoids capturing that tab a second time. This does not prove real Chrome worker suspension. |
 | Chrome loads unpacked extension | User observed | User loaded the unpacked prototype in visible Chrome on 2026-10-12. Chrome version was not recorded. |
 | One tab captures and renders to fixed output | User reported | User routed both fixture tabs and said both worked. Exact endpoint names and meter evidence were not recorded. |
 | Two tabs route to distinct endpoints without crossfeed | User reported; not independently verified | User answered that both routes worked and that all was good when asked about separate meters and crossfeed. No meter trace or loopback recording was captured. |

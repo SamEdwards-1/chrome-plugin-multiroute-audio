@@ -53,6 +53,35 @@ test("worker reserves a tab before async eligibility checks", async () => {
   assert.equal(captures, 1);
 });
 
+test("a restarted worker recovers routes from the surviving offscreen engine", async () => {
+  let listener;
+  let captures = 0;
+  const route = { tabId: 7, deviceId: "output-one", contextState: "running", trackState: "live" };
+  const chrome = {
+    runtime: {
+      id: "extension-id",
+      onMessage: { addListener(callback) { listener = callback; } },
+      async sendMessage(message) {
+        assert.equal(message.type, "SNAPSHOT");
+        return { ok: true, routes: [route] };
+      }
+    },
+    offscreen: { async hasDocument() { return true; } },
+    tabs: { async get() { return { url: "http://localhost:8765" }; }, onRemoved: { addListener() {} } },
+    tabCapture: { async getMediaStreamId() { captures++; return "unexpected-stream"; } }
+  };
+  loadScript("service-worker.js", { chrome });
+  assert.equal((await dispatch(listener, { target: "worker", type: "SNAPSHOT" })).routes[0].tabId, 7);
+
+  // Loading the script in a new VM discards all service-worker globals while the engine stays alive.
+  loadScript("service-worker.js", { chrome });
+  const recovered = await dispatch(listener, { target: "worker", type: "SNAPSHOT" });
+  assert.equal(recovered.routes[0].contextState, "running");
+  const startAgain = await dispatch(listener, { target: "worker", type: "START", tabId: 7, deviceId: "output-one" });
+  assert.equal(startAgain.ok, true);
+  assert.equal(captures, 0, "recovery must not capture the same tab twice");
+});
+
 test("offscreen engine rejects overlapping captures and acknowledges stop before idle", async () => {
   const mediaStart = deferred();
   let listener;
