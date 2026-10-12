@@ -26,6 +26,8 @@ This plan requires a visible desktop Chrome session and two browser-visible outp
 | Stop cleanup | Stop each route in its source tab's popup. | Native playback returns, no duplicate path, and offscreen document closes after the last route. |
 | No microphone | Repeat discovery and default routing on a system without usable audio input or with input permission denied. | Available endpoints, permission errors, and whether default output still works. |
 
+After each test run, click **Stop tone** on both fixture pages and stop any remaining extension routes. Start the tones again only when the next audio observation is ready.
+
 The fixture has fixed 220 Hz and 440 Hz sine sources at approximately -30 dBFS. It deliberately starts only after a page click to avoid autoplay restrictions. The tones are useful for identifying paths; they do not measure latency or prove a path unless separately captured or metered.
 
 For console diagnostics, open `chrome://extensions` and inspect the extension service worker or offscreen document. A route's popup state reports `AudioContext.state` and audio track `readyState`; these indicate a running graph, not physical audibility. Record exact Chrome errors without copying sensitive browsing data.
