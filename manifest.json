@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Multiroute Audio Feasibility",
+  "version": "0.0.1",
+  "description": "Local prototype for routing captured tabs to browser audio outputs.",
+  "minimum_chrome_version": "116",
+  "permissions": ["activeTab", "tabCapture", "offscreen"],
+  "background": { "service_worker": "src/service-worker.js" },
+  "action": { "default_title": "Multiroute Audio", "default_popup": "src/popup.html" }
+}

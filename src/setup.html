@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audio device access</title><link rel="stylesheet" href="ui.css"></head>
+<body class="setup-page">
+  <header class="setup-shell"><div class="setup-shell-inner"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Multiroute Audio</span><span class="shell-divider" aria-hidden="true"></span><span class="shell-page">Device access</span></div></header>
+  <main>
+    <header class="setup-intro">
+      <p class="section-kicker">Settings / Audio devices</p>
+      <h1>Audio device access</h1>
+      <p class="lead">See which outputs Chrome can use for tab routing. A hardware channel appears here only when its driver exposes a separate browser output.</p>
+    </header>
+    <div class="setup-grid">
+      <section class="setup-panel" aria-labelledby="discovery-heading">
+        <div class="section-heading"><h2 id="discovery-heading">Discover outputs</h2><span class="step-number">01</span></div>
+        <p class="panel-description">Refresh the list or grant temporary access to reveal device names.</p>
+        <div class="setup-actions"><button id="refresh" class="button-secondary">Refresh outputs</button><button id="choose" class="button-secondary">Choose an output</button><button id="microphone" class="button-primary">Reveal device names <span aria-hidden="true">→</span></button></div>
+        <div class="note"><span class="note-icon" aria-hidden="true">i</span><div><strong>About microphone permission</strong><p>Chrome may require temporary input access to show output names. The microphone track stops immediately and is never routed. You can decline and still use the system default.</p></div></div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="setup-panel output-panel" aria-labelledby="outputs-heading">
+        <div class="section-heading"><h2 id="outputs-heading">Visible outputs <span id="output-count" class="route-count"></span></h2><span class="step-number">02</span></div>
+        <p class="panel-description">Outputs currently exposed to this browser session.</p>
+        <ul id="outputs"></ul>
+      </section>
+    </div>
+    <footer class="setup-footer">After access changes, return to the source tab and reopen the toolbar popup to refresh its output list.</footer>
+  </main>
+  <script type="module" src="setup.js"></script>
+</body></html>

@@ -1,0 +1,44 @@
+# Milestone 0 feasibility report
+
+Status: **Provisional architecture pass on one user-observed setup; Milestone 0 acceptance remains open.** The user reported two working routes to distinct outputs, playback after popup closure, and recovery after long source silence. Confirmed worker suspension and the failure/measurement matrix remain unobserved. This is sufficient to continue design work, but not to claim qualified compatibility or public-release readiness.
+
+## Implemented path
+
+- Toolbar popup freezes the current source tab when opened and starts capture only after **Route this tab** is clicked.
+- Service worker obtains a short-lived tab stream ID after popup invocation and passes it to one offscreen document.
+- Offscreen engine creates one `AudioContext` per route, sets a selected sink when requested, consumes the tab stream, and renders through a gain node. Captures are independent in memory.
+- The popup can be closed while the offscreen document owns streams. Reopening it asks the engine for current routes, so service worker globals are not the live status source.
+- Visible setup page enumerates outputs, detects `selectAudioOutput()`, and offers an explicit temporary microphone-permission path. Temporary microphone tracks are stopped immediately.
+- Local fixture pages generate distinct deterministic 220 Hz and 440 Hz tones.
+
+## Evidence status
+
+Host inventory on 2026-10-12 showed Windows version `10.0.26200.0` and an installed Chrome executable version `154.0.8037.98`. The active browser's `chrome://version` page was not checked. Chrome-visible endpoint labels, driver versions, sample rates, and loopback or meter traces have not been recorded, so this is not yet a qualified hardware configuration.
+
+| Claim | Status | Evidence or missing check |
+| --- | --- | --- |
+| Manifest and scripts parse | Verified locally | JSON parse and JavaScript syntax checks. |
+| Concurrent start and stop ordering | Verified locally | `node --test tests/*.test.js` forces overlapping starts in both worker and engine, checks that explicit stop sends no early idle signal, and holds context closure open while two stops race. Starting the same tab during cleanup is rejected without a second capture. This does not prove browser behavior. |
+| Worker restart state recovery | Verified in a mocked lifecycle test | A new service-worker VM reads the surviving offscreen engine's route snapshot and avoids capturing that tab a second time. This does not prove real Chrome worker suspension. |
+| Chrome loads unpacked extension | User observed | User loaded the unpacked prototype in visible Chrome on 2026-10-12. Chrome version was not recorded. |
+| One tab captures and renders to fixed output | User reported | User routed both fixture tabs and said both worked. Exact endpoint names and meter evidence were not recorded. |
+| Two tabs route to distinct endpoints without crossfeed | User reported; not independently verified | User answered that both routes worked and that all was good when asked about separate meters and crossfeed. No meter trace or loopback recording was captured. |
+| Popup closure preserves both routes | User reported | User answered that all was good when asked whether the 440 Hz route continued after popup closure. Duration and meter trace were not recorded. |
+| Worker truly suspends while audio continues | Untested | User later clarified that service worker DevTools was open throughout the live runs. That keeps the worker awake, so the observed routing does not establish survival of worker suspension. Repeat with DevTools fully closed before the idle interval. |
+| Five-minute source silence preserves capture | User observed pass | An initial run was inconclusive when its fixture tabs disappeared. In a second run, the routed 220 Hz fixture stayed open and silent from 15:06:48 to after 15:11:48 UTC on 2026-10-12, then its tone was restarted without touching the route. User reported 220 Hz returned on its original selected output and 440 Hz stayed on its own. |
+| Offscreen `AudioContext.resume()` succeeds from toolbar invocation | Inferred pass from live routing | The engine awaits `context.resume()` and rejects a non-running context before reporting route success. The user's working fixed-output routes therefore imply that this call succeeded in the tested Chrome session; no separate context trace was saved. |
+| Setup-page output discovery | Verified from user screenshot | The separate diagnostics page listed multiple distinct browser-visible outputs, including analog, ADAT, S/PDIF, and display-audio paths. **Choose an output** was disabled, and the page stated that Chrome did not expose a dedicated output picker in this session. No microphone grant was needed to display these labels. |
+| Setup-page output permission carries to offscreen engine | Picker path unavailable in this Chrome session | Because `selectAudioOutput()` was unavailable, no setup-page picker grant could be transferred. Previously visible fixed outputs were selectable in the popup and the user reported that two routes worked. |
+| Optional microphone-permission fallback | User reported success; effect unmeasured | User reported that **Reveal outputs using microphone permission** worked. The output list before and after was not recorded, and live release of the temporary input track was not independently observed. Source code stops each temporary track in `finally`. |
+| No-microphone system can route to default and discover outputs | Mocked failure path passes; live behavior untested | A setup-page test rejects temporary microphone access and confirms the previously enumerated output remains visible; a later successful grant stops its temporary track. This does not establish physical no-input behavior in Chrome. |
+| Fixed-output loss remains silent and recoverable | Live behavior untested; recovery policy not implemented | Probe disconnect/reconnect and Chrome fallback before making a device-loss claim. Production monitoring/recovery belongs to later reliability work. |
+
+No Chrome version, OS/device combination, physical output path, or driver behavior is claimed as qualified by this report yet. A Windows device inventory can identify candidate endpoints but does not establish their visibility or use in Chrome.
+
+## Recommendation
+
+Treat the core architecture as provisionally feasible on the user's observed setup. Keep formal milestone acceptance open until the [manual validation plan](feasibility-manual.md) confirms playback through real worker suspension with DevTools closed and records the environment and remaining failure cases. The dedicated output picker is unavailable in the tested Chrome session, so permission sharing through that picker cannot be required for this configuration; the visible fixed outputs and optional microphone path are the supported observations. Device-loss and no-input results should determine supported-platform and recovery claims, not erase the two-route success already observed. Do not describe the extension as release-ready from this report.
+
+## Prototype limits
+
+This proof of concept lacks production message schema/revisions, route operation cancellation, persistence, device-loss monitoring, volume/mute controls, and accessibility qualification. Endpoint labels are browser-provided and can be blank; names do not imply channel mapping. Stopping a route ends capture and should return the tab to native playback, subject to browser validation.
