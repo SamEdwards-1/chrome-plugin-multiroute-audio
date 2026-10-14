@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Multiroute Audio UI preview</title>
+  <link rel="stylesheet" href="/src/app.css">
+</head>
+<body class="min-h-screen">
+  <main class="mx-auto max-w-3xl px-6 py-12">
+    <p class="eyebrow">Local UI preview</p>
+    <h1 class="mt-2 text-3xl font-bold">Multiroute Audio</h1>
+    <p class="lead mt-4">Explore the extension screens with sample routes and outputs. This preview does not capture audio or change Chrome routes.</p>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      <a class="card block no-underline hover:border-[var(--green)]" href="/src/popup.html">
+        <h2>Toolbar popup</h2>
+        <p class="text-[var(--muted)]">Route controls and active routes</p>
+      </a>
+      <a class="card block no-underline hover:border-[var(--green)]" href="/src/setup.html">
+        <h2>Audio device access</h2>
+        <p class="text-[var(--muted)]">Output discovery and diagnostics</p>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
