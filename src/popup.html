@@ -17,14 +17,15 @@
       <label class="field-label" for="output">Audio output</label>
       <select id="output"></select>
       <p class="field-help">Only outputs available to Chrome appear here.</p>
+      <p class="privacy-hint">Routing uses this tab’s audio and title only on your device. It keeps playing after this popup closes until you stop the route.</p>
       <div class="actions"><button id="start" class="button-primary">Route this tab <span aria-hidden="true">→</span></button><button id="switch" class="button-primary" hidden>Switch output <span aria-hidden="true">→</span></button><button id="stop" class="button-secondary" hidden>Stop this route</button></div>
-      <p id="status" role="status" aria-live="polite"></p>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
     </section>
     <section class="routes-section" aria-labelledby="routes-heading">
-      <div class="section-heading"><h2 id="routes-heading">Active routes <span id="route-count" class="route-count"></span></h2><span class="step-number">02</span></div>
+      <div class="section-heading"><h2 id="routes-heading" tabindex="-1">Active routes <span id="route-count" class="route-count"></span></h2><span class="step-number">02</span></div>
       <ul id="routes"></ul>
     </section>
-    <footer class="popup-footer"><a href="setup.html" target="_blank">Audio device access and diagnostics <span aria-hidden="true">↗</span></a></footer>
+    <footer class="popup-footer"><a href="setup.html" target="_blank" rel="noopener">Audio device access and diagnostics <span class="sr-only">(opens in a new tab)</span><span aria-hidden="true">↗</span></a></footer>
   </main>
   <script type="module" src="popup.js"></script>
 </body>

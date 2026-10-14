@@ -8,6 +8,8 @@ Examples include headphones, speakers, USB interfaces, display audio, and virtua
 
 The repository contains a small unpacked Manifest V3 feasibility prototype. It is not a qualified release; browser and hardware acceptance results are tracked in [the feasibility report](docs/feasibility-report.md).
 
+For public-release preparation, see the [accessibility and store-readiness checklist](docs/public-release-readiness.md) and [privacy policy](PRIVACY.md).
+
 Read [the detailed product and engineering specification](SPEC.md) for scope, user flows, browser constraints, permissions, architecture, lifecycle behavior, testing, and delivery milestones.
 
 ## Initial release scope
