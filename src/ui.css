@@ -22,7 +22,7 @@ body {
   font: 14px/1.5 "Segoe UI", system-ui, sans-serif;
 }
 
-body.popup-page { width: 380px; }
+body.popup-page { width: 380px; max-width: 100%; }
 body.setup-page { min-height: 100vh; }
 
 main { width: 100%; max-width: 780px; margin: 0 auto; padding: 24px; }

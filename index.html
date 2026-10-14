@@ -5,21 +5,47 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Multiroute Audio UI preview</title>
   <link rel="stylesheet" href="/src/app.css">
+  <style>
+    .popup-viewport {
+      width: 382px;
+      height: 602px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--canvas);
+      box-shadow: 0 24px 64px #0008;
+    }
+    .popup-viewport iframe {
+      display: block;
+      width: 380px;
+      height: 600px;
+      border: 0;
+    }
+  </style>
 </head>
 <body class="min-h-screen">
-  <main class="mx-auto max-w-3xl px-6 py-12">
-    <p class="eyebrow">Local UI preview</p>
-    <h1 class="mt-2 text-3xl font-bold">Multiroute Audio</h1>
-    <p class="lead mt-4">Explore the extension screens with sample routes and outputs. This preview does not capture audio or change Chrome routes.</p>
-    <div class="mt-8 grid gap-4 sm:grid-cols-2">
-      <a class="card block no-underline hover:border-[var(--green)]" href="/src/popup.html">
-        <h2>Toolbar popup</h2>
-        <p class="text-[var(--muted)]">Route controls and active routes</p>
-      </a>
-      <a class="card block no-underline hover:border-[var(--green)]" href="/src/setup.html">
-        <h2>Audio device access</h2>
-        <p class="text-[var(--muted)]">Output discovery and diagnostics</p>
-      </a>
+  <main class="mx-auto max-w-5xl px-6 py-10">
+    <div class="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_382px]">
+      <div>
+        <p class="eyebrow">Local UI preview</p>
+        <h1 class="mt-2 text-3xl font-bold">Multiroute Audio</h1>
+        <p class="lead mt-4">Design the toolbar popup at its installed width. The sample routes and outputs are local preview data; nothing here captures audio or changes Chrome routes.</p>
+        <div class="card mt-8">
+          <h2>Other views</h2>
+          <p class="text-[var(--muted)]">The device-access screen opens as a full page in the extension.</p>
+          <a class="mt-4 inline-block font-semibold text-[var(--blue)] hover:underline" href="/src/setup.html">Open audio device access ↗</a>
+        </div>
+        <p class="footer">Need more room while editing? <a href="/src/popup.html">Open the popup on its own</a></p>
+      </div>
+      <section aria-label="Toolbar popup preview">
+        <div class="mb-3 flex items-center justify-between gap-4 text-xs text-[var(--muted)]">
+          <span class="font-semibold uppercase tracking-widest text-[var(--green)]">Toolbar popup</span>
+          <span>380 × 600 px preview</span>
+        </div>
+        <div class="popup-viewport">
+          <iframe src="/src/popup.html" title="Multiroute toolbar popup"></iframe>
+        </div>
+      </section>
     </div>
   </main>
 </body>
