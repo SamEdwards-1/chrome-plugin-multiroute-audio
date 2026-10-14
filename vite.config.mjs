@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 
 const extensionFiles = [
   "manifest.json",
+  "src/fonts/LICENSE",
   "src/service-worker.js",
   "src/offscreen.html",
   "src/offscreen.js"

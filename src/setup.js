@@ -1,11 +1,13 @@
 const status = document.querySelector("#status");
 const list = document.querySelector("#outputs");
+const outputCount = document.querySelector("#output-count");
 const choose = document.querySelector("#choose");
 
 async function refresh() {
   list.replaceChildren();
   const devices = await navigator.mediaDevices.enumerateDevices();
   const outputs = devices.filter(device => device.kind === "audiooutput");
+  if (outputCount) outputCount.textContent = outputs.length;
   for (const [index, device] of outputs.entries()) {
     const item = document.createElement("li");
     item.textContent = device.label || `Output ${index + 1} (label hidden)`;

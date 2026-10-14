@@ -2,6 +2,7 @@ const sourceElement = document.querySelector("#source");
 const outputElement = document.querySelector("#output");
 const statusElement = document.querySelector("#status");
 const routesElement = document.querySelector("#routes");
+const routeCountElement = document.querySelector("#route-count");
 const startButton = document.querySelector("#start");
 const switchButton = document.querySelector("#switch");
 const stopButton = document.querySelector("#stop");
@@ -33,6 +34,7 @@ async function refresh() {
     outputElement.value = route.deviceId;
   }
   routesElement.replaceChildren();
+  if (routeCountElement) routeCountElement.textContent = routeResult.routes.length;
   for (const item of routeResult.routes) {
     const row = document.createElement("li");
     row.className = "route-item";
@@ -82,34 +84,35 @@ async function refresh() {
     });
     const state = document.createElement("span");
     state.className = "route-state";
-    state.textContent = healthy ? "Graph running" : "Check route";
+    state.textContent = healthy ? "Running" : "Needs attention";
     heading.append(focusTab, state);
 
     const destination = document.createElement("p");
     destination.className = "route-destination";
     destination.textContent = label;
-    const sink = document.createElement("p");
-    sink.className = "route-sink";
-    sink.textContent = `Chrome sink: ${sinkLabel}`;
-    const meta = document.createElement("div");
-    meta.className = "route-meta";
-    for (const [name, value] of [["Context", item.contextState], ["Track", item.trackState]]) {
-      const chip = document.createElement("span");
-      chip.textContent = `${name}: ${value}`;
-      meta.append(chip);
+    const details = document.createElement("details");
+    details.className = "route-details";
+    const summary = document.createElement("summary");
+    summary.textContent = "Route details";
+    const diagnostics = document.createElement("dl");
+    for (const [name, value] of [["Chrome sink", sinkLabel], ["Audio context", item.contextState], ["Capture track", item.trackState]]) {
+      const term = document.createElement("dt");
+      term.textContent = name;
+      const description = document.createElement("dd");
+      description.textContent = value;
+      diagnostics.append(term, description);
     }
+    details.append(summary, diagnostics);
     const footer = document.createElement("div");
     footer.className = "route-footer";
-    const consequence = document.createElement("span");
-    consequence.textContent = "Stop returns normal tab playback";
     const stopRoute = document.createElement("button");
     stopRoute.type = "button";
     stopRoute.className = "route-stop";
     stopRoute.textContent = "Stop route";
     stopRoute.setAttribute("aria-label", `Stop route for Tab ${item.tabId}; return to normal playback`);
     stopRoute.addEventListener("click", () => perform("STOP", item.tabId));
-    footer.append(consequence, stopRoute);
-    row.append(heading, destination, sink, meta, footer);
+    footer.append(details, stopRoute);
+    row.append(heading, destination, footer);
     routesElement.append(row);
   }
   if (!routeResult.routes.length) {

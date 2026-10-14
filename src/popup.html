@@ -4,21 +4,27 @@
 <body class="popup-page">
   <main>
     <header class="app-header">
-      <p class="eyebrow">Audio routing</p>
-      <h1>Multiroute Audio</h1>
-      <p class="source-line">Source tab<strong id="source">Checking current tab…</strong></p>
+      <div class="brand-row"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span class="product-name">Multiroute Audio</span></div>
+      <h1>Route tab audio</h1>
+      <p class="lead">Send this tab to an available output.</p>
     </header>
-    <section class="card" aria-label="Route controls">
-      <label class="section-label" for="output">Audio output</label>
+    <section class="current-tab" aria-labelledby="current-tab-heading">
+      <p class="section-kicker" id="current-tab-heading">Current tab</p>
+      <p id="source">Checking current tab…</p>
+    </section>
+    <section class="routing-section" aria-labelledby="route-heading">
+      <div class="section-heading"><h2 id="route-heading">Destination</h2><span class="step-number">01</span></div>
+      <label class="field-label" for="output">Audio output</label>
       <select id="output"></select>
-      <div class="actions"><button id="start">Route this tab</button><button id="switch" hidden>Switch output</button><button id="stop" hidden>Stop route</button></div>
+      <p class="field-help">Only outputs available to Chrome appear here.</p>
+      <div class="actions"><button id="start" class="button-primary">Route this tab <span aria-hidden="true">→</span></button><button id="switch" class="button-primary" hidden>Switch output <span aria-hidden="true">→</span></button><button id="stop" class="button-secondary" hidden>Stop this route</button></div>
       <p id="status" role="status" aria-live="polite"></p>
     </section>
-    <section class="card" aria-labelledby="routes-heading">
-      <h2 id="routes-heading">Active routes</h2>
+    <section class="routes-section" aria-labelledby="routes-heading">
+      <div class="section-heading"><h2 id="routes-heading">Active routes <span id="route-count" class="route-count"></span></h2><span class="step-number">02</span></div>
       <ul id="routes"></ul>
     </section>
-    <p class="footer"><a href="setup.html" target="_blank">Audio device access and diagnostics</a></p>
+    <footer class="popup-footer"><a href="setup.html" target="_blank">Audio device access and diagnostics <span aria-hidden="true">↗</span></a></footer>
   </main>
   <script type="module" src="popup.js"></script>
 </body>

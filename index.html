@@ -6,47 +6,47 @@
   <title>Multiroute Audio UI preview</title>
   <link rel="stylesheet" href="/src/app.css">
   <style>
-    .popup-viewport {
-      width: 382px;
-      height: 602px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--canvas);
-      box-shadow: 0 24px 64px #0008;
-    }
-    .popup-viewport iframe {
-      display: block;
-      width: 380px;
-      height: 600px;
-      border: 0;
-    }
+    .preview-shell { min-height: 100vh; }
+    .preview-header { height: 48px; background: var(--layer); border-bottom: 1px solid var(--border-subtle); }
+    .preview-header-inner { display: flex; align-items: center; gap: 8px; max-width: 1080px; height: 100%; margin: auto; padding: 0 24px; font-weight: 600; }
+    .preview-header-label { margin-left: auto; color: var(--text-secondary); font-size: 12px; font-weight: 400; }
+    .preview-main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 48px; max-width: 1080px; margin: auto; padding: 56px 24px 80px; }
+    .preview-copy { max-width: 460px; }
+    .preview-copy h1 { margin-top: 16px; font-size: clamp(28px, 4vw, 42px); font-weight: 400; line-height: 1.2; }
+    .preview-copy .lead { margin-top: 24px; font-size: 16px; line-height: 24px; }
+    .preview-info { margin-top: 48px; padding: 24px; background: var(--layer); border: 1px solid var(--border-subtle); }
+    .preview-info h2 { margin-bottom: 12px; font-size: 20px; font-weight: 400; }
+    .preview-info p { margin-bottom: 24px; color: var(--text-secondary); }
+    .preview-info a { display: flex; justify-content: space-between; gap: 12px; padding: 16px; color: #fff; background: #0f62fe; text-decoration: none; }
+    .preview-info a:hover { background: #0353e9; }
+    .preview-secondary { display: inline-block; margin-top: 24px; color: var(--interactive-hover); text-decoration: none; }
+    .preview-secondary:hover { text-decoration: underline; }
+    .preview-label { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px; color: var(--text-secondary); font-size: 12px; }
+    .preview-label strong { color: var(--text); font-weight: 600; }
+    .popup-viewport { width: 380px; height: 600px; overflow: hidden; border: 1px solid var(--border); background: var(--background); }
+    .popup-viewport iframe { display: block; width: 380px; height: 600px; border: 0; }
+    @media (max-width: 820px) { .preview-main { grid-template-columns: 1fr; gap: 48px; } }
+    @media (max-width: 430px) { .preview-main { padding: 40px 16px; } .popup-viewport { width: min(380px, calc(100vw - 32px)); } }
   </style>
 </head>
-<body class="min-h-screen">
-  <main class="mx-auto max-w-5xl px-6 py-10">
-    <div class="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_382px]">
-      <div>
-        <p class="eyebrow">Local UI preview</p>
-        <h1 class="mt-2 text-3xl font-bold">Multiroute Audio</h1>
-        <p class="lead mt-4">Design the toolbar popup at its installed width. The sample routes and outputs are local preview data; nothing here captures audio or changes Chrome routes.</p>
-        <div class="card mt-8">
-          <h2>Other views</h2>
-          <p class="text-[var(--muted)]">The device-access screen opens as a full page in the extension.</p>
-          <a class="mt-4 inline-block font-semibold text-[var(--blue)] hover:underline" href="/src/setup.html">Open audio device access ↗</a>
-        </div>
-        <p class="footer">Need more room while editing? <a href="/src/popup.html">Open the popup on its own</a></p>
+<body class="preview-shell">
+  <header class="preview-header"><div class="preview-header-inner"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Multiroute Audio</span><span class="preview-header-label">Development preview</span></div></header>
+  <main class="preview-main">
+    <div class="preview-copy">
+      <p class="section-kicker">Interface / Toolbar popup</p>
+      <h1>Design at the installed size.</h1>
+      <p class="lead">The panel shows the extension at its 380 × 600 pixel viewport. Sample outputs and routes let you work on the interface without connected audio hardware.</p>
+      <div class="preview-info">
+        <h2>Device access</h2>
+        <p>Review the full-page flow for output discovery and permission guidance.</p>
+        <a href="/src/setup.html">Open device access <span aria-hidden="true">↗</span></a>
       </div>
-      <section aria-label="Toolbar popup preview">
-        <div class="mb-3 flex items-center justify-between gap-4 text-xs text-[var(--muted)]">
-          <span class="font-semibold uppercase tracking-widest text-[var(--green)]">Toolbar popup</span>
-          <span>380 × 600 px preview</span>
-        </div>
-        <div class="popup-viewport">
-          <iframe src="/src/popup.html" title="Multiroute toolbar popup"></iframe>
-        </div>
-      </section>
+      <a class="preview-secondary" href="/src/popup.html">Open the popup on its own ↗</a>
     </div>
+    <section aria-label="Toolbar popup preview">
+      <div class="preview-label"><strong>Toolbar popup</strong><span>380 × 600 px</span></div>
+      <div class="popup-viewport"><iframe src="/src/popup.html" title="Multiroute toolbar popup"></iframe></div>
+    </section>
   </main>
 </body>
 </html>
