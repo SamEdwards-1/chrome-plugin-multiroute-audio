@@ -4,7 +4,7 @@ Last updated: 2026-10-17
 
 ## Launch status
 
-First public submission in preparation. No Store item has been created or submitted in this session. Version 0.1.0 is the first upload candidate; increment the version if the dashboard already has an upload with this version.
+First public submission in preparation. No Store item has been created or submitted in this session. Version 1.0.0 is the current upload candidate, superseding the 0.1.x packages. The developer account is ready according to the account owner. The privacy notice is public on the default branch and was verified without authentication (HTTP 200) on 2026-10-17. Chrome blocks automated access to the Web Store dashboard, so the account owner must upload and submit the item manually.
 
 The developer reported independent successful testing on 2026-10-17: “I tested it independently and it works great.” This is a user report, not an independently witnessed acceptance matrix. The earlier popup-opening issue resolved without a code change and its cause is unconfirmed. No WCAG conformance or universal hardware compatibility claim is made.
 
@@ -95,9 +95,9 @@ Disclose local processing. Do not select a blanket “does not handle user data�
 
 ## Privacy policy
 
-**Public URL after this release branch is merged:** https://github.com/SamEdwards-1/chrome-plugin-multiroute-audio/blob/main/PRIVACY.md
+**Verified public URL:** https://github.com/SamEdwards-1/chrome-plugin-multiroute-audio/blob/main/PRIVACY.md
 
-This URL must be checked without authentication after merging. At the start of this session the privacy policy existed only on the feasibility branch, which was newer than the merged PR.
+The public page includes the policy, publisher name and contact email. It requires no sign-in.
 
 ## Distribution
 
@@ -136,16 +136,17 @@ The extension processes tab audio and titles locally, contains no remote code, a
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.1.0 | 2026-10-17 | Initial candidate: per-tab routing, output switching, active routes, device discovery, accessibility fixes and local privacy disclosures | Prepared; not submitted |
+| 1.0.0 | 2026-10-17 | First public release package: per-tab routing, output switching, device discovery, accessibility fixes, privacy disclosures; theme-colored scrollbars appear while scrolling and hide after 700 ms idle | Prepared; not submitted |
+| 0.1.x | 2026-10-17 | Internal preparation packages | Superseded; not submitted |
 
 ## Remaining launch steps
 
-- [ ] Account owner completes developer registration, required agreement, payment, email verification and two-step verification.
+- [x] Account owner reports the developer account is ready. Any dashboard-specific verification remains with the owner.
 - [x] Public publisher name and support email chosen; verification in the dashboard remains with the account owner.
-- [ ] Merge this branch and verify the public privacy-policy URL.
+- [x] Merge launch preparation and verify the public privacy-policy URL (PR #12).
 - [ ] Review the exact production build loaded from `dist/` in Chrome, including keyboard navigation. Automated tests do not certify accessibility.
 - [ ] Save the current UI screenshot at 1280 × 800 and upload it, `store-icon.png`, and `promo.png`.
-- [ ] Upload `release/multiroute-audio-0.1.0.zip` as a new item; select Public distribution; complete listing and privacy fields from this document.
+- [ ] Upload `release/multiroute-audio-1.0.0.zip` as a new item; select Public distribution; complete listing and privacy fields from this document.
 - [ ] Complete any dashboard-specific publisher/trader declarations truthfully, then submit for Google's review. Submission is not publication or approval.
 
 Registration: https://chrome.google.com/webstore/devconsole/

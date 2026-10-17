@@ -6,13 +6,13 @@ Examples include headphones, speakers, USB interfaces, display audio, and virtua
 
 ## Project status
 
-Version 0.1.0 is being prepared for its first public Chrome Web Store submission. It has not been published. On October 17, 2026, the developer reported successful independent testing. Earlier browser and hardware observations are tracked in [the feasibility report](docs/feasibility-report.md); this is not a broad hardware compatibility or accessibility certification.
+Version 1.0.0 is being prepared for its first public Chrome Web Store submission. It has not been published. On October 17, 2026, the developer reported successful independent testing. Earlier browser and hardware observations are tracked in [the feasibility report](docs/feasibility-report.md); this is not a broad hardware compatibility or accessibility certification.
 
 For submission copy, permission justifications, assets and current launch status, see [CHROMEWEBSTORE.md](CHROMEWEBSTORE.md). See also the [accessibility and store-readiness checklist](docs/public-release-readiness.md) and [privacy policy](PRIVACY.md).
 
 Read [the detailed product and engineering specification](SPEC.md) for scope, user flows, browser constraints, permissions, architecture, lifecycle behavior, testing, and delivery milestones.
 
-## Features in 0.1.0
+## Features in 1.0
 
 - Multiple tabs routed concurrently, with one destination per tab.
 - Independent output selection and switching.
@@ -32,7 +32,7 @@ The raw source directory still loads without a build step. For the Store submiss
 
 ## Build the Store package
 
-Run `npm ci`, `npm test`, then `powershell -ExecutionPolicy Bypass -File scripts/package-release.ps1` from this directory. The packaging script builds the production extension, validates its assets and permissions, and writes `release/multiroute-audio-0.1.0.zip` with `manifest.json` at the ZIP root. It refuses to overwrite an existing package. Build output excludes the development mock, fixtures, tests, documentation and Store graphics.
+Run `npm ci`, `npm test`, then `powershell -ExecutionPolicy Bypass -File scripts/package-release.ps1` from this directory. The packaging script builds the production extension, validates its assets and permissions, and writes `release/multiroute-audio-1.0.0.zip` with `manifest.json` at the ZIP root. It refuses to overwrite an existing package. Build output excludes the development mock, fixtures, tests, documentation and Store graphics.
 
 Load `dist/` unpacked for the final installed-build check before uploading the ZIP. Chrome assigns a new extension ID for the Store item; routes and device permissions from the development ID do not migrate. See [the submission document](CHROMEWEBSTORE.md) for the remaining account, image and dashboard steps.
 
