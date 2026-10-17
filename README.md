@@ -6,28 +6,35 @@ Examples include headphones, speakers, USB interfaces, display audio, and virtua
 
 ## Project status
 
-The repository contains a small unpacked Manifest V3 feasibility prototype. It is not a qualified release; browser and hardware acceptance results are tracked in [the feasibility report](docs/feasibility-report.md).
+Version 0.1.0 is being prepared for its first public Chrome Web Store submission. It has not been published. On October 17, 2026, the developer reported successful independent testing. Earlier browser and hardware observations are tracked in [the feasibility report](docs/feasibility-report.md); this is not a broad hardware compatibility or accessibility certification.
 
-For public-release preparation, see the [accessibility and store-readiness checklist](docs/public-release-readiness.md) and [privacy policy](PRIVACY.md).
+For submission copy, permission justifications, assets and current launch status, see [CHROMEWEBSTORE.md](CHROMEWEBSTORE.md). See also the [accessibility and store-readiness checklist](docs/public-release-readiness.md) and [privacy policy](PRIVACY.md).
 
 Read [the detailed product and engineering specification](SPEC.md) for scope, user flows, browser constraints, permissions, architecture, lifecycle behavior, testing, and delivery milestones.
 
-## Initial release scope
+## Features in 0.1.0
 
 - Multiple tabs routed concurrently, with one destination per tab.
-- Independent output selection, volume, and mute.
+- Independent output selection and switching.
+- Focus a routed tab or stop its route from the popup.
 - Background audio that continues after the popup closes.
-- Local processing and local preferences.
-- Windows Chrome qualification first, with portable application code.
+- Local processing without recording, analytics, accounts, or saved routing preferences.
+- Tested by the developer in Chrome on Windows; other configurations remain unverified.
 - Capability-based routing without vendor-specific dependencies.
 
-Arbitrary channel mapping within a device and sending one tab to multiple outputs are later capabilities with separate validation gates.
+Volume and mute controls, saved preferences, arbitrary channel mapping within a device, and sending one tab to multiple outputs are not included.
 
-## Try the feasibility prototype
+## Try the extension
 
 Load this directory with Chrome's **Load unpacked** button on `chrome://extensions`. Serve the repository root with `python -m http.server 8765`, then open `http://localhost:8765/fixtures/tone.html?hz=220` and `http://localhost:8765/fixtures/tone.html?hz=440` in separate tabs. Start each tone with its page button and use the extension toolbar popup on each tab to assign its output. See [the manual validation plan](docs/feasibility-manual.md) for exact steps and evidence to record.
 
-The raw source directory still loads without a build step. The prototype has no recording, telemetry, or vendor-specific routing. It intentionally omits the full manager, preferences, gain controls, and robust failure policy planned in the spec.
+The raw source directory still loads without a build step. For the Store submission, use the production build and package described below.
+
+## Build the Store package
+
+Run `npm ci`, `npm test`, then `powershell -ExecutionPolicy Bypass -File scripts/package-release.ps1` from this directory. The packaging script builds the production extension, validates its assets and permissions, and writes `release/multiroute-audio-0.1.0.zip` with `manifest.json` at the ZIP root. It refuses to overwrite an existing package. Build output excludes the development mock, fixtures, tests, documentation and Store graphics.
+
+Load `dist/` unpacked for the final installed-build check before uploading the ZIP. Chrome assigns a new extension ID for the Store item; routes and device permissions from the development ID do not migrate. See [the submission document](CHROMEWEBSTORE.md) for the remaining account, image and dashboard steps.
 
 ## Work on the UI without audio hardware
 

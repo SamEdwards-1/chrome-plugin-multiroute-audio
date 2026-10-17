@@ -1,8 +1,10 @@
 # Multiroute Audio privacy policy
 
-Last updated: October 14, 2026
+Last updated: October 17, 2026
 
 Multiroute Audio routes audio from Chrome tabs you choose to audio outputs available on your computer. It does not create an account, record audio, run analytics, or send audio or browsing data to the developer or a remote server.
+
+Publisher: Ducks in a Row.
 
 ## Data used for routing
 
@@ -28,6 +30,10 @@ You can stop any route from the popup. You can also revoke Chrome's microphone p
 
 ## Limited use
 
-The use of information received from Google APIs adheres to the Chrome Web Store User Data Policy, including its Limited Use requirements. Data accessed by this extension is used only to provide and improve its tab-audio routing feature.
+The use of information received from Google APIs adheres to the Chrome Web Store User Data Policy, including its Limited Use requirements. Data accessed by this extension is used only to provide its tab-audio routing feature.
 
-Questions or privacy requests: [open an issue in the project repository](https://github.com/SamEdwards-1/chrome-plugin-multiroute-audio/issues).
+## Policy changes
+
+Changes to these practices will be reflected in this policy with an updated date. If an extension update introduces new data handling, it will explain the change and request consent where required before the new handling begins.
+
+Questions or privacy requests: [ducksinarowinteractive@gmail.com](mailto:ducksinarowinteractive@gmail.com). For product support, [open an issue in the project repository](https://github.com/SamEdwards-1/chrome-plugin-multiroute-audio/issues). Please do not post sensitive information in public issues.

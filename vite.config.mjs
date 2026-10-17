@@ -37,9 +37,11 @@ export default defineConfig(({ command }) => ({
       }
     }
   ],
-  server: { host: "127.0.0.1", port: 5173, strictPort: true },
+  server: { host: "127.0.0.1", port: 5173, strictPort: true, watch: { ignored: ["**/release/**"] } },
   build: {
     outDir: "dist",
+    // Chrome 116+ supports native module preloading; no runtime fetch shim is needed.
+    modulePreload: { polyfill: false },
     rollupOptions: {
       input: {
         popup: resolve("src/popup.html"),

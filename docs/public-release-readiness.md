@@ -2,6 +2,12 @@
 
 This is a release checklist, not a conformance or Chrome Web Store approval claim. Google reviews the submitted package and listing. Automated accessibility checks cannot replace keyboard, screen-reader, and hardware testing.
 
+## Launch preparation update — October 17, 2026
+
+The developer reported successful independent testing and confirmed that the popup opens. The earlier transient popup-opening failure resolved without a code change; its cause was not established. This report does not establish that every historical hardware, worker-idle, screen-reader or device-loss test below was completed.
+
+The first Store candidate is version 0.1.0. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) contains the Store description, per-permission justifications, local-data disclosures, reviewer instructions, public publisher details and current submission steps. `scripts/package-release.ps1` builds and validates a clean ZIP; `npm run release:check` verifies built resource paths, icon dimensions, narrow permissions and exclusion of development mocks and remote resources. Store icon and small promotional image assets are in `store-assets/`. The production build, Store account setup and Google review remain distinct stages; no publication is claimed.
+
 ## Completed in the repository
 
 - Manifest V3 uses only `activeTab`, `tabCapture`, and `offscreen`; no host permissions, content scripts, network calls, analytics, remote code, or persistent audio storage are present.
