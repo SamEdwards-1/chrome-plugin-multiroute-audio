@@ -2,6 +2,7 @@ const sourceElement = document.querySelector("#source");
 const outputElement = document.querySelector("#output");
 const statusElement = document.querySelector("#status");
 const routesElement = document.querySelector("#routes");
+const routesHeading = document.querySelector("#routes-heading");
 const routeCountElement = document.querySelector("#route-count");
 const startButton = document.querySelector("#start");
 const switchButton = document.querySelector("#switch");
@@ -133,6 +134,15 @@ async function perform(type, tabId = sourceTab?.id) {
   buttons.forEach(button => { button.disabled = true; });
   statusElement.textContent = `${type === "START" ? "Starting" : type === "STOP" ? "Stopping" : "Switching"} route for Tab ${tabId}…`;
   const commandStartedAt = performance.now();
+  const restoreFocus = () => {
+    if (type === "STOP" && tabId !== sourceTab?.id) {
+      routesHeading?.focus?.();
+      return;
+    }
+    const target = type === "STOP" ? (startButton.hidden ? stopButton : startButton) : (switchButton.hidden ? startButton : switchButton);
+    if (!target.hidden && !target.disabled) target.focus?.();
+    else routesHeading?.focus?.();
+  };
   try {
     await request(type, { tabId, deviceId: outputElement.value });
     const commandMs = Math.round(performance.now() - commandStartedAt);
@@ -145,6 +155,7 @@ async function perform(type, tabId = sourceTab?.id) {
     await refresh().catch(() => {});
   } finally {
     buttons.forEach((button, index) => { button.disabled = priorDisabled[index]; });
+    restoreFocus();
   }
 }
 

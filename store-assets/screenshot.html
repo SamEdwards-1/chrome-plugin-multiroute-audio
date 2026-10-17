@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Multiroute Audio — Store screenshot</title>
+  <link rel="stylesheet" href="/src/ui.css">
+  <style>
+    html, body { width: 1280px; height: 800px; overflow: hidden; }
+    body { display: grid; grid-template-columns: 1fr 380px; gap: 80px; align-items: center; padding: 64px 88px; background: #161616; }
+    main { grid-column: 1; grid-row: 1; }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; }
+    .brand img { width: 40px; height: 40px; }
+    h1 { margin: 36px 0 24px; font-size: 50px; line-height: 1.12; font-weight: 400; letter-spacing: -1.5px; }
+    .description { max-width: 480px; font-size: 20px; line-height: 1.5; color: #c6c6c6; }
+    .feature { display: flex; gap: 16px; align-items: center; padding: 20px 0; border-bottom: 1px solid #393939; font-size: 17px; }
+    .feature span { color: #78a9ff; font-size: 13px; }
+    .features { margin-top: 28px; }
+    .shot-note { margin-top: 28px; color: #a8a8a8; font-size: 13px; line-height: 1.5; }
+    figure { grid-column: 2; grid-row: 1; margin: 0; }
+    iframe { display: block; width: 380px; height: 600px; border: 1px solid #525252; box-shadow: 0 20px 64px #0007; }
+    figcaption { margin-top: 14px; font-size: 12px; color: #a8a8a8; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand"><img src="/icons/icon48.png" alt=""><span>Multiroute Audio</span></div>
+    <h1>Your tabs.<br>Your audio outputs.</h1>
+    <p class="description">Send audio from individual tabs to different speakers, headphones, or other outputs available in Chrome.</p>
+    <div class="features">
+      <p class="feature"><span>01</span>One selected output for each tab</p>
+      <p class="feature"><span>02</span>Keep listening after the popup closes</p>
+      <p class="feature"><span>03</span>Switch or stop routes from one place</p>
+    </div>
+    <p class="shot-note">Audio stays on your device. No recording or analytics.<br>Available outputs depend on Chrome and your audio setup.</p>
+  </main>
+  <figure>
+    <iframe src="/src/popup.html?tab=102" title="Multiroute Audio popup with example routes"></iframe>
+    <figcaption>Current interface shown with example tabs and outputs.</figcaption>
+  </figure>
+</body>
+</html>

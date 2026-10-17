@@ -5,6 +5,10 @@ import { defineConfig } from "vite";
 
 const extensionFiles = [
   "manifest.json",
+  "icons/icon16.png",
+  "icons/icon32.png",
+  "icons/icon48.png",
+  "icons/icon128.png",
   "src/fonts/LICENSE",
   "src/service-worker.js",
   "src/offscreen.html",
@@ -33,9 +37,11 @@ export default defineConfig(({ command }) => ({
       }
     }
   ],
-  server: { host: "127.0.0.1", port: 5173, strictPort: true },
+  server: { host: "127.0.0.1", port: 5173, strictPort: true, watch: { ignored: ["**/release/**"] } },
   build: {
     outDir: "dist",
+    // Chrome 116+ supports native module preloading; no runtime fetch shim is needed.
+    modulePreload: { polyfill: false },
     rollupOptions: {
       input: {
         popup: resolve("src/popup.html"),
